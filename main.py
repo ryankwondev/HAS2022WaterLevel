@@ -6,22 +6,17 @@ import psycopg2
 app = FastAPI()
 
 
-class MeasuredData(BaseModel):
-    auth_key: str
-    level: int
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/measurements/{measurement_id}", status_code=200)
-async def create_measurement(measurement_id: int, data: MeasuredData, response: Response):
-    if data.auth_key != "p5ssw0rd":
+@app.post("/measurements/{measurement_id}/", status_code=200)
+async def create_measurement(measurement_id: int, auth_key: str, level: int, response: Response):
+    if auth_key != "p5ssw0rd":
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"detail": "Invalid auth key"}
-    elif data.level < 0 or data.level > 1023:
+    elif level < 0 or level > 1023:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": "Invalid level"}
 
@@ -30,11 +25,11 @@ async def create_measurement(measurement_id: int, data: MeasuredData, response: 
     connection = psycopg2.connect(dbname="postgres", user="postgres", password="p5ssw0rd", host="localhost")
     cursor = connection.cursor()
     cursor.execute("INSERT INTO measurements (measurement_id, level, created_at) VALUES (%s, %s, %s);",
-                   (measurement_id, data.level, timestamp))
+                   (measurement_id, level, timestamp))
     connection.commit()
     connection.close()
 
-    return {"measurement_id": measurement_id, "level": data.level, "created_at": timestamp}
+    return {"measurement_id": measurement_id, "level": level, "created_at": timestamp}
 
 
 @app.get("/measurements/{measurement_id}", status_code=200)
