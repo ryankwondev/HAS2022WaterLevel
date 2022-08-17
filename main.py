@@ -27,7 +27,7 @@ async def create_measurement(measurement_id: int, data: MeasuredData, response: 
 
     timestamp = dt.datetime.now(dt.timezone("Asia/Seoul"))
 
-    connection = psycopg2.connect(dbname="fastapi", user="postgres", password="postgres", host="localhost")
+    connection = psycopg2.connect(dbname="postgres", user="postgres", password="p5ssw0rd", host="localhost")
     cursor = connection.cursor()
     cursor.execute("INSERT INTO measurements (measurement_id, level, created_at) VALUES (%s, %s, %s);",
                    (measurement_id, data.level, timestamp))
@@ -39,7 +39,7 @@ async def create_measurement(measurement_id: int, data: MeasuredData, response: 
 
 @app.get("/measurements/{measurement_id}", status_code=200)
 async def get_measurement(measurement_id: int, response: Response):
-    connection = psycopg2.connect(dbname="fastapi", user="postgres", password="postgres", host="localhost")
+    connection = psycopg2.connect(dbname="postgres", user="postgres", password="p5ssw0rd", host="localhost")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM measurements WHERE measurement_id = %s ORDER BY created_at LIMIT 30;",
                    (measurement_id,))
