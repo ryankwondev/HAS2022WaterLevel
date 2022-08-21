@@ -40,7 +40,7 @@ void setup() {
     WiFiClient client;
     HTTPClient http;
 
-    if (http.begin(client, "http://141.164.43.236/")) {
+    if (http.begin(client, "http://***.***.**.**/")) {
         int httpCode = http.GET();
         if (httpCode > 0) {
             String payload = http.getString();
@@ -67,7 +67,7 @@ void loop() {
         HTTPClient http, http2;
 
         if (http.begin(client,
-                       "http://141.164.43.236/measurements/1/?auth_key=p5ssw0rd&level=" + String(measurement[0]))) {
+                       "http://***.***.**.***/measurements/1/?auth_key=p5ssw0rd&level=" + String(measurement[0]))) {
             int httpCode = http.POST("");
             if (httpCode > 0) {
                 String payload = http.getString();
@@ -81,7 +81,7 @@ void loop() {
         }
 
         if (http.begin(client,
-                       "http://141.164.43.236/measurements/2/?auth_key=p5ssw0rd&level=" + String(measurement[1]))) {
+                       "http://***.***.**.***/measurements/2/?auth_key=p5ssw0rd&level=" + String(measurement[1]))) {
             int httpCode = http.POST("");
             if (httpCode > 0) {
                 String payload = http.getString();
