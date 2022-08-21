@@ -1,4 +1,5 @@
 #include <Arduino.h>
+
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
@@ -10,7 +11,6 @@ char password[] = "hana1234";
 
 void setup() {
     Serial.begin(9600);
-    pinMode(LED_BUILTIN, OUTPUT);
     wifi_set_opmode(STATION_MODE);
 
     struct station_config wifi_config;
@@ -34,10 +34,8 @@ void setup() {
         Serial.println("Wifi connecting...");
         delay(500);
     }
-    // Print wifi IP addess
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
-    digitalWrite(LED_BUILTIN, HIGH);
 
     WiFiClient client;
     HTTPClient http;
@@ -47,15 +45,12 @@ void setup() {
         if (httpCode > 0) {
             String payload = http.getString();
             Serial.println(payload);
-            digitalWrite(LED_BUILTIN, HIGH);
         } else {
             Serial.println("Error on HTTP request");
-            digitalWrite(LED_BUILTIN, LOW);
         }
         http.end();
     } else {
         Serial.println("Error on HTTP begin");
-        digitalWrite(LED_BUILTIN, LOW);
     }
 }
 
@@ -68,7 +63,6 @@ void loop() {
     Serial.println(measurement[1]);
 
     if (WiFi.status() == WL_CONNECTED) {
-        digitalWrite(LED_BUILTIN, HIGH);
         WiFiClient client;
         HTTPClient http, http2;
 
@@ -78,15 +72,12 @@ void loop() {
             if (httpCode > 0) {
                 String payload = http.getString();
                 Serial.println(payload);
-                digitalWrite(LED_BUILTIN, HIGH);
             } else {
                 Serial.println("Error on HTTP request");
-                digitalWrite(LED_BUILTIN, LOW);
             }
             http.end();
         } else {
             Serial.println("Error on HTTP begin");
-            digitalWrite(LED_BUILTIN, LOW);
         }
 
         if (http.begin(client,
@@ -95,15 +86,12 @@ void loop() {
             if (httpCode > 0) {
                 String payload = http.getString();
                 Serial.println(payload);
-                digitalWrite(LED_BUILTIN, HIGH);
             } else {
                 Serial.println("Error on HTTP request");
-                digitalWrite(LED_BUILTIN, LOW);
             }
             http.end();
         } else {
             Serial.println("Error on HTTP begin");
-            digitalWrite(LED_BUILTIN, LOW);
         }
     }
 
